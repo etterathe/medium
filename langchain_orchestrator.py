@@ -1,6 +1,6 @@
 from langchain.schema import Document
 from langchain.sql_database import SQLDatabase
-from langchain.chains import SQLDatabaseChain
+from langchain_experimental.sql import SQLDatabaseChain
 
 class LangChainOrchestrator:
     def __init__(self, db_connector, vector_store):

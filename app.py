@@ -1,5 +1,4 @@
 import streamlit as st
-#TODO: Create other modules
 from database_connector import DatabaseConnector
 from model_selector import ModelSelector
 from vector_store import VectorStore
@@ -17,24 +16,31 @@ class ChatWithDatabaseApp:
         self.nlp_processor = None
 
     def run(self):
-        st.title("Chat with Your Database")
+        st.markdown("""
+            # :crystal_ball: medium
+            #### Chat with your SQL databases and discover world of new insights
+
+            ---
+            """)
 
         # Database Connection
-        db_uri = st.text_input("Enter your database URI:")
+        st.subheader("Database Connection")
+        db_uri = st.text_input("Enter your database URI:", placeholder="postgresql://username:password@host:port/database_name")
+        self.db_connector = DatabaseConnector(db_uri)
         if st.button("Connect to Database"):
-            self.db_connector = DatabaseConnector(db_uri)
             if self.db_connector.connect():
                 st.success("Connected to database successfully!")
             else:
                 st.error("Failed to connect to database. Please check your URI.")
 
         # Model Selection
+        print(self.db_connector)
         llm_model = self.model_selector.select_llm_model()
         embedding_model = self.model_selector.select_embedding_model()
 
         # Initialize components
         if st.button("Initialize Chat System"):
-            if self.db_connector and self.db_connector.is_connected():
+            if self.db_connector:
                 self.vector_store = VectorStore(embedding_model)
                 self.orchestrator = LangChainOrchestrator(self.db_connector, self.vector_store)
                 self.vllm_service = VLLMService(llm_model)
@@ -42,6 +48,8 @@ class ChatWithDatabaseApp:
                 st.success("Chat system initialized successfully!")
             else:
                 st.error("Please connect to a database first.")
+        else:
+            st.warning("Please initialize the chat system.")
 
         # Chat Interface
         user_input = st.text_input("Ask a question about your database:")

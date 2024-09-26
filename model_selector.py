@@ -6,7 +6,7 @@ class ModelSelector:
         self.api = HfApi()
 
     def get_models(self, task):
-        models = self.api.list_models(filter=task, sort="downloads", direction=-1, limit=100)
+        models = self.api.list_models(filter=task, sort="downloads", direction=-1, limit=1000)
         return [model.id for model in models]
 
     def select_llm_model(self):

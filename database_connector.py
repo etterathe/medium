@@ -16,9 +16,6 @@ class DatabaseConnector:
             print(f"Error connecting to database: {e}")
             return False
 
-    def is_connected(self):
-        return self.engine is not None
-
     def execute_query(self, query):
         if not self.is_connected():
             raise Exception("Not connected to a database")
